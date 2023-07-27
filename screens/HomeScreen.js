@@ -1,15 +1,17 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useCallback, useEffect, useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { View, KeyboardAvoidingView, Text, TextInput, TouchableOpacity } from 'react-native';
 import { Image } from 'react-native';
 import { MagnifyingGlassIcon } from 'react-native-heroicons/outline';
 import { MapPinIcon } from 'react-native-heroicons/solid';
 import { ScrollView } from 'react-native';
 import { debounce } from 'lodash';
 import { fetchLocations, fetchWeatherForecast } from '../api/weather';
-import { weatherImages } from '../constants';
+import { weatherImages, days, weatherRu } from '../constants';
 import * as Progress from 'react-native-progress';
 import { getData, storeData } from '../utils/asyncStorage';
+import Video from 'react-native-video';
+import rain from '../assets/video/rain.mp4';
 
 const HomeScreen = () => {
   const [showSearch, setShowSearch] = useState(false);
@@ -59,6 +61,7 @@ const HomeScreen = () => {
   return (
     <View className="flex-1 relative">
       <StatusBar style="light" />
+      <Video source={rain} paused={false} repeat={true} resizeMode='cover'/>
       <Image
         blurRadius={70}
         source={require('../assets/images/bg.png')}
@@ -74,6 +77,7 @@ const HomeScreen = () => {
       <View style={{ height: '7%' }} className="mb-10 mx-4 relative z-50">
         <View className="flex-row justify-end items-center rounded-full relative">
           {showSearch ? (
+            
             <TextInput
               onChangeText={handleTextDebounce}
               placeholder="Выберите город"
@@ -84,11 +88,14 @@ const HomeScreen = () => {
               className="w-full rounded-full pl-6 h-10 text-white top-11"
             />
           ) : null}
+          <KeyboardAvoidingView behavior='padding'>
           <TouchableOpacity
             onPress={() => setShowSearch(!showSearch)}
-            className="rounded-full top-12 right-4 pt-1 absolute">
+            className="rounded-full top-8 right-4 pt-1 absolute">
             <MagnifyingGlassIcon size="20" color="white" />
           </TouchableOpacity>
+          </KeyboardAvoidingView>
+
           {locations.length > 0 && showSearch ? (
             <View className="absolute w-full bg-gray-300 top-16 rounded-3xl">
               {locations.map((loc, index) => {
@@ -118,14 +125,14 @@ const HomeScreen = () => {
         </View>
         <View className="space-y-4">
           <Text className="text-white text-center text-4xl mt-6">{current?.temp_c}&#176;</Text>
-          <Text className="text-white text-center text-xl tracking-widest">{current?.condition.text}</Text>
+          <Text className="text-white text-center text-xl tracking-widest">{weatherRu[current?.condition.text]}</Text>
         </View>
       </View>
       {/* Другая статистика */}
       <View className="flex-row justify-between mx-4 my-4">
         <View className="flex-row space-x-2 items-center">
           <Image source={require('../assets/icons/wind.png')} className="h-6 w-6"></Image>
-          <Text className="text-white font-semibold text-base">{Math.round((current?.wind_kph) * 1000 / 3600 * 100) / 100} m/s</Text>
+          <Text className="text-white font-semibold text-base">{Math.round((current?.wind_kph) * 1000 / 3600 * 100) / 100} м/с</Text>
         </View>
         <View className="flex-row space-x-2 items-center">
           <Image source={require('../assets/icons/drop.png')} className="h-6 w-6"></Image>
@@ -142,12 +149,12 @@ const HomeScreen = () => {
         {weather?.forecast?.forecastday?.map((item, index) => {
           let date = new Date(item.date);
           let options = {weekday: 'long'};
-          let dayName = date.toLocaleDateString('ru-RU', options);
+          let dayName = date.toLocaleDateString('en-US', options);
           dayName = dayName.split(',')[0];
         return (
           <View key={index} style={{backgroundColor: "rgba(165,165,165,0.5)"}} className="flex justify-center items-center w-20 rounded-3xl py-3 space-y-1 mr-4 bg-opacity-20">
           <Image source={weatherImages[item?.day?.condition?.text]} className="w-10 h-10"></Image>
-            <Text className="text-white">{dayName}</Text>
+            <Text className="text-white">{days[dayName]}</Text>
             <Text className="text-white text-xl font-semibold">{item?.day?.avgtemp_c}&#176;</Text>
         </View>
         )

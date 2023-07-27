@@ -18,3 +18,32 @@ export const weatherImages = {
     'Mist': require('../assets/images/mist.png'),
     'other': require('../assets/images/moderaterain.png')
 }
+
+export const weatherRu = {
+    'Partly cloudy': 'Малооблачно',
+    'Moderate rain': 'Умеренный дождь',
+    'Patchy rain possible': 'Возможен кратковременный дождь',
+    'Sunny': 'Солнечно',
+    'Clear': 'Чистое небо',
+    'Overcast': 'Пасмурно',
+    'Cloudy': 'Облачно',
+    'Light rain': 'Небольшой дождь',
+    'Moderate rain at times': 'Возможен сильный дождь',
+    'Heavy rain': 'Ливень',
+    'Heavy rain at times': 'Возможен ливень',
+    'Moderate or heavy freezing rain': 'Умеренный или сильный дождь',
+    'Moderate or heavy rain shower': 'Умеренный или сильный ливень',
+    'Moderate or heavy rain with thunder': 'Умеренный или сильный дождь с грозой',
+    'Mist': 'Туман',
+    'other': 'Другое',
+}
+
+export const days = {
+    'Monday': 'Пн',
+    'Tuesday': 'Вт',
+    'Wednesday': 'Ср',
+    'Thursday': 'Чт',
+    'Friday': 'Пт',
+    'Saturday': 'Сб',
+    'Sunday': 'Вс'
+  }
