@@ -19,7 +19,7 @@ export const weatherAssets = {
   Sunny: {
     image: require('../assets/images/sun.png'),
     video: require('../assets/video/sunny.mp4'),
-    description: 'Солнечно',
+    description: 'Ясно',
   },
   Clear: {
     image: require('../assets/images/sun.png'),
@@ -84,11 +84,11 @@ export const weatherAssets = {
 };
 
 export const days = {
-  Monday: 'Пн',
-  Tuesday: 'Вт',
-  Wednesday: 'Ср',
-  Thursday: 'Чт',
-  Friday: 'Пт',
-  Saturday: 'Сб',
-  Sunday: 'Вс',
+  Monday: { full: 'Понедельник', short: 'Пн' },
+  Tuesday: { full: 'Вторник', short: 'Вт' },
+  Wednesday: { full: 'Среда', short: 'Ср' },
+  Thursday: { full: 'Четверг', short: 'Чт' },
+  Friday: { full: 'Пятница', short: 'Пт' },
+  Saturday: { full: 'Суббота', short: 'Сб' },
+  Sunday: { full: 'Воскресенье', short: 'Вс' },
 };
