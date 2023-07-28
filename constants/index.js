@@ -71,6 +71,11 @@ export const weatherAssets = {
     video: require('../assets/video/thunder.mp4'),
     description: 'Умеренный или сильный дождь с грозой',
   },
+  'Light rain shower': {
+    image: require('../assets/images/moderaterain.png'),
+    video: require('../assets/video/thunder.mp4'),
+    description: 'Грибной дождик',
+  },
   Mist: {
     image: require('../assets/images/mist.png'),
     video: require('../assets/video/mist.mp4'),

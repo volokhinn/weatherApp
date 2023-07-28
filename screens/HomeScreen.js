@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { View, KeyboardAvoidingView, Text, TextInput, TouchableOpacity, Modal, ScrollView, Image, TouchableWithoutFeedback } from 'react-native';
+import { View, KeyboardAvoidingView, Text, TextInput, TouchableOpacity, Modal, ScrollView, Image, TouchableWithoutFeedback, ActivityIndicator } from 'react-native';
 import { MagnifyingGlassIcon } from 'react-native-heroicons/outline';
 import { MapPinIcon } from 'react-native-heroicons/solid';
 import { debounce } from 'lodash';
@@ -22,7 +22,6 @@ const HomeScreen = () => {
   const [locations, setLocations] = useState([]);
   const [weather, setWeather] = useState({});
   const [loading, setLoading] = useState(true);
-  const [status, setStatus] = React.useState({});
   const [selectedWeather, setSelectedWeather] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedDay, setSelectedDay] = useState('');
@@ -42,7 +41,6 @@ const HomeScreen = () => {
   };
 
   const handleSearch = (value) => {
-    // fetch locations
     if (value.length > 2) {
       fetchLocations({ cityName: value }).then((data) => {
         setLocations(data);
@@ -95,19 +93,14 @@ const HomeScreen = () => {
       />
       {loading ? (
         <View className="flex-1 flex-row justify-center items-center">
-          <Progress.CircleSnail
-            thickness={10}
-            size={140}
-            color="#0bb3b2"
-            className="bg-transparent"
-          />
+          <ActivityIndicator size="small" color="#0000ff" />
         </View>
       ) : (
         <>
           {/* Поиск */}
           <View style={{ height: '7%' }} className="mb-10 mx-4 relative z-50">
             <View className="flex-row justify-end items-center rounded-full relative">
-              {showSearch ? (
+              {showSearch && (
                 <TextInput
                   onChangeText={handleTextDebounce}
                   placeholder="Выберите город"
@@ -117,7 +110,7 @@ const HomeScreen = () => {
                   }}
                   className="w-full rounded-full pl-6 h-10 text-white top-11"
                 />
-              ) : null}
+              )}
               <KeyboardAvoidingView behavior="padding">
                 <TouchableOpacity
                   onPress={() => setShowSearch(!showSearch)}
@@ -127,7 +120,7 @@ const HomeScreen = () => {
                 </TouchableOpacity>
               </KeyboardAvoidingView>
 
-              {locations.length > 0 && showSearch ? (
+              {locations.length > 0 && showSearch && (
                 <View className="absolute w-full bg-gray-300 top-16 rounded-3xl">
                   {locations.map((loc, index) => {
                     return (
@@ -137,12 +130,12 @@ const HomeScreen = () => {
                         className="px-5 py-4 flex-row items-center"
                       >
                         <MapPinIcon size="20" color="gray" />
-                        <Text className="ml-2">{loc?.name}</Text>
+                        <Text className="ml-2">{loc?.name}, {loc?.country}</Text>
                       </TouchableOpacity>
                     );
                   })}
                 </View>
-              ) : null}
+              )}
             </View>
           </View>
           {/* Прогноз */}
@@ -153,6 +146,7 @@ const HomeScreen = () => {
             </Text>
             {/* Иконка погоды */}
             <View className="flex-row justify-center">
+            {/* {console.log('Current weather condition text:', current?.condition?.text)} */}
               <Image source={weatherAssets[current?.condition?.text]?.image} className="w-40 h-40"></Image>
             </View>
             <View className="space-y-4">
@@ -222,7 +216,7 @@ const HomeScreen = () => {
             </ScrollView>
           </View>
           {/* Modal */}
-          <Modal visible={modalVisible} animationType="slide" transparent={true} onRequestClose={closeModal}>
+          <Modal visible={modalVisible} animationType="fade" transparent={true} onRequestClose={closeModal}>
             <TouchableWithoutFeedback onPress={closeModal}>
               <View
               className="flex flex-1 justify-center align-center"
