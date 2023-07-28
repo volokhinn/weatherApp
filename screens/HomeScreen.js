@@ -1,17 +1,15 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { View, KeyboardAvoidingView, Text, TextInput, TouchableOpacity } from 'react-native';
+import { View, KeyboardAvoidingView, Text, TextInput, TouchableOpacity, Modal, ScrollView } from 'react-native';
 import { Image } from 'react-native';
 import { MagnifyingGlassIcon } from 'react-native-heroicons/outline';
 import { MapPinIcon } from 'react-native-heroicons/solid';
-import { ScrollView } from 'react-native';
 import { debounce } from 'lodash';
 import { fetchLocations, fetchWeatherForecast } from '../api/weather';
-import { weatherImages, days, weatherRu, weatherVideos } from '../constants';
+import { days, weatherAssets } from '../constants';
 import * as Progress from 'react-native-progress';
 import { getData, storeData } from '../utils/asyncStorage';
 import { Video, ResizeMode } from 'expo-av';
-import rain from '../assets/video/rain.mp4';
 
 const HomeScreen = () => {
   const video = useRef(null);
@@ -20,6 +18,8 @@ const HomeScreen = () => {
   const [weather, setWeather] = useState({});
   const [loading, setLoading] = useState(true);
   const [status, setStatus] = React.useState({});
+  const [selectedWeather, setSelectedWeather] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const handleLocation = (loc) => {
     setLocations([]);
@@ -60,12 +60,16 @@ const HomeScreen = () => {
   const handleTextDebounce = useCallback(debounce(handleSearch, 400), []);
   const { current, location } = weather;
 
+  const closeModal = () => {
+    setModalVisible(false);
+  };
+
   return (
     <View className="flex-1 relative">
       <StatusBar style="light" />
       <Video
         ref={video}
-        source={weatherVideos[current?.condition?.text]}
+        source={weatherAssets[current?.condition?.text]?.video}
         resizeMode="cover"
         shouldPlay
         isMuted
@@ -135,12 +139,12 @@ const HomeScreen = () => {
             </Text>
             {/* Иконка погоды */}
             <View className="flex-row justify-center">
-              <Image source={weatherImages[current?.condition?.text]} className="w-40 h-40"></Image>
+              <Image source={weatherAssets[current?.condition?.text]?.image} className="w-40 h-40"></Image>
             </View>
             <View className="space-y-4">
               <Text className="text-white text-center text-4xl mt-6">{current?.temp_c}&#176;</Text>
               <Text className="text-white text-center text-xl tracking-widest">
-                {weatherRu[current?.condition.text]}
+                {weatherAssets[current?.condition.text]?.description}
               </Text>
             </View>
           </View>
@@ -176,22 +180,59 @@ const HomeScreen = () => {
                 let dayName = date.toLocaleDateString('en-US', options);
                 dayName = dayName.split(',')[0];
                 return (
-                  <View
+                  <TouchableOpacity
                     key={index}
-                    style={{ backgroundColor: 'rgba(165,165,165,0.5)' }}
-                    className="flex justify-center items-center w-20 rounded-3xl py-3 space-y-1 mr-4 bg-opacity-20">
+                    onPress={() => {
+                      setSelectedWeather(item);
+                      setModalVisible(true);
+                    }}
+                    style={{
+                      backgroundColor: 'rgba(165, 165, 165, 0.5)',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      width: 100,
+                      borderRadius: 20,
+                      paddingVertical: 10,
+                      marginRight: 10,
+                    }}
+                  >
                     <Image
-                      source={weatherImages[item?.day?.condition?.text]}
-                      className="w-10 h-10"></Image>
-                    <Text className="text-white">{days[dayName]}</Text>
-                    <Text className="text-white text-xl font-semibold">
+                      source={weatherAssets[item?.day?.condition?.text]?.image}
+                      style={{ width: 50, height: 50 }}
+                    />
+                    <Text style={{ color: 'white' }}>{days[dayName]}</Text>
+                    <Text style={{ color: 'white', fontSize: 18, fontWeight: 'bold' }}>
                       {Math.round(item?.day?.maxtemp_c)}&#176;
                     </Text>
-                  </View>
+                  </TouchableOpacity>
                 );
               })}
             </ScrollView>
           </View>
+          {/* Modal */}
+          <Modal visible={modalVisible} animationType="slide" transparent={true}>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              }}
+            >
+              {selectedWeather && (
+                <View style={{ backgroundColor: 'white', padding: 20 }}>
+                  <Image
+                    source={weatherAssets[selectedWeather?.day?.condition?.text]?.image}
+                    style={{ width: 100, height: 100 }}
+                  />
+                  <Text>{/* Display detailed weather information here */}</Text>
+                  <TouchableOpacity onPress={closeModal}>
+                    <Text style={{ textAlign: 'center', color: 'blue' }}>Close</Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+            </View>
+          </Modal>
         </>
       )}
     </View>
