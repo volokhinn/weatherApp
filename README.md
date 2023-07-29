@@ -1,3 +1,6 @@
+
+![Frame 4](https://github.com/volokhinn/weatherApp/assets/57394725/4bf5e02c-eb03-43f9-b96c-6190f8795092)
+
 ### React Native & Expo
 
 # weatherApp
