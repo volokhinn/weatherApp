@@ -165,7 +165,7 @@ const HomeScreen = () => {
                 </Text>
                 {/* Иконка погоды */}
                 <View className="flex-row justify-center">
-                  {/* {console.log('Current weather condition text:', current?.condition?.text)} */}
+                  {console.log('Current weather condition text:', current?.condition?.text)}
                   <Image
                     source={weatherAssets[current?.condition?.text]?.image}
                     className="w-40 h-40"></Image>

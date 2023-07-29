@@ -81,6 +81,11 @@ export const weatherAssets = {
     video: require('../assets/video/mist.mp4'),
     description: 'Туман',
   },
+  Fog: {
+    image: require('../assets/images/mist.png'),
+    video: require('../assets/video/mist.mp4'),
+    description: 'Туман',
+  },
   other: {
     image: require('../assets/images/moderaterain.png'),
     video: require('../assets/video/rainClouds.mp4'),
