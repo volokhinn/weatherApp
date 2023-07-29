@@ -73,7 +73,7 @@ export const weatherAssets = {
   },
   'Light rain shower': {
     image: require('../assets/images/moderaterain.png'),
-    video: require('../assets/video/thunder.mp4'),
+    video: require('../assets/video/rain.mp4'),
     description: 'Грибной дождик',
   },
   Mist: {
