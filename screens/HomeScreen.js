@@ -132,7 +132,7 @@ const HomeScreen = () => {
               </KeyboardAvoidingView>
 
               {locations.length > 0 && showSearch && (
-                <View className="absolute w-full bg-gray-300 top-16 rounded-3xl">
+                <View className="absolute w-full bg-gray-300 top-24 rounded-3xl">
                   {locations.map((loc, index) => {
                     return (
                       <TouchableOpacity
